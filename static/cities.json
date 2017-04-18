@@ -1,0 +1,6 @@
+[
+    { "zip": 10001, "name": "New York" },
+    { "zip": 94016, "name": "San Francisco" },
+    { "zip": 90001, "name": "Los Angeles" },
+    { "zip": 60007, "name": "Chicago" }
+]
