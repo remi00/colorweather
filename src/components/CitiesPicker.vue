@@ -1,6 +1,8 @@
 <template>
   <div>
     <md-list v-if="citiesReady">
+      <md-subheader>Choose the city:</md-subheader>
+
       <md-list-item v-for="city in cities" :href="'#/city/' + city.zip">
         <md-avatar>
           <img src="https://placeimg.com/40/40/tech/8" alt="People">
