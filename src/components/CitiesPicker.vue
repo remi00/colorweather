@@ -1,21 +1,30 @@
 <template>
   <div>
-    <md-list v-if="citiesReady">
-      <md-subheader>Choose the city:</md-subheader>
+    <md-layout md-gutter md-align="center">
+      <md-layout md-flex-xsmall="95" md-flex-small="90" md-flex-medium="75" md-flex-large="50" md-flex-xlarge="40">
+        <md-whiteframe md-elevation="2" class="city-select">
+          <md-list v-if="citiesReady" class="md-double-line">
+            <md-subheader>Choose the city:</md-subheader>
 
-      <md-list-item v-for="city in cities" :href="'#/city/' + city.zip">
-        <md-avatar>
-          <img src="https://placeimg.com/40/40/tech/8" alt="People">
-        </md-avatar>
+            <md-list-item v-for="city in cities" :href="'#/city/' + city.zip" :key="city.zip">
+              <md-avatar>
+                <img :src="city.thumbnail" :alt="city.name">
+              </md-avatar>
 
-        <span>{{ city.name }}</span>
+              <div class="md-list-text-container">
+                <span>{{ city.name }}</span>
+                <span>{{ city.state }}, {{ city.zip }}</span>
+              </div>
 
-        <md-button class="md-icon-button md-list-action">
-          <md-icon class="md-primary">chevron_right</md-icon>
-        </md-button>
-      </md-list-item>
-    </md-list>
-    <md-spinner v-if="loading" md-indeterminate></md-spinner>
+              <md-button class="md-icon-button md-list-action">
+                <md-icon class="md-primary">chevron_right</md-icon>
+              </md-button>
+            </md-list-item>
+          </md-list>
+        </md-whiteframe>
+        <md-spinner v-if="loading" md-indeterminate></md-spinner>
+      </md-layout>
+    </md-layout>
   </div>
 </template>
 
@@ -40,7 +49,6 @@ export default {
   },
   computed: {
     citiesReady() {
-      console.log(`citiesReady: ${this.loading} ${this.error} ${this.cities.length}`);
       return !this.loading && !this.error && this.cities.length > 0;
     },
   },
@@ -66,5 +74,10 @@ export default {
 </script>
 
 <style scoped>
+
+.city-select {
+  width: 100%;
+  margin: 10px;
+}
 
 </style>
