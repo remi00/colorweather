@@ -9,12 +9,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Cities',
+      name: 'cities',
       component: CitiesPicker,
     },
     {
       path: '/weather/:zip',
-      name: 'Weather',
+      name: 'weather',
       component: Weather,
     },
   ],
