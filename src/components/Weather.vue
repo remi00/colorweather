@@ -1,40 +1,49 @@
 <template>
   <div>
     <md-layout md-flex="30">
-      <md-whiteframe md-elevation="3" class="city-select">
-        <md-card>
+      <md-whiteframe class="weather" md-elevation="3">
+        <md-card v-if="weatherReady">
           <md-card-header>
             <md-card-header-text>
-              <div class="md-title">City ZIP: {{ $route.params.zip }}</div>
-              <div class="md-subhead">Subtitle here</div>
+              <div class="md-title">{{ city.name }}, {{ city.state }}</div>
+              <div class="md-subhead">{{ weather.item.title }}</div>
             </md-card-header-text>
 
             <md-menu md-size="4" md-direction="bottom left">
               <md-button class="md-icon-button" md-menu-trigger href="/#/">
                 <md-icon>close</md-icon>
               </md-button>
-
-              <md-menu-content>
-                <md-menu-item>
-                  <span>Foobar</span>
-                  <md-icon>phone</md-icon>
-                </md-menu-item>
-
-                <md-menu-item>
-                  <span>Send a message</span>
-                  <md-icon>message</md-icon>
-                </md-menu-item>
-              </md-menu-content>
             </md-menu>
           </md-card-header>
 
+          <md-card-content>
+            <img :src="'/static/conditions/' + weather.item.condition.code + '.svg'" :alt="weather.item.condition.text">
+            <div class="md-title">{{ weather.item.condition.temp }} &deg;{{ weather.units.temperature }}</div>
+            <div class="md-subhead">{{ weather.item.condition.text }}</div>
+            <ul>
+              <li>Sunrise: <strong>{{ weather.astronomy.sunrise }}</strong>  Sunset: <strong>{{ weather.astronomy.sunset }}</strong></li>
+              <li>Last update: {{ weather.lastBuildDate }}</li>
+              <li>Humidity: {{ weather.atmosphere.humidity }}%</li>
+              <li>Pressure: {{ weather.atmosphere.pressure }} {{ weather.units.pressure }}</li>
+              <li>Visibility: {{ weather.atmosphere.visibility }} {{ weather.units.distance }}</li>
+            </ul>
+          </md-card-content>
+
           <md-card-media>
-            <img src="assets/card-image-1.jpg" alt="People">
+            <img :src="city.thumbnail" :alt="weather.description">
           </md-card-media>
 
           <md-card-content>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non, voluptas eius illo quas, saepe voluptate pariatur in deleniti minus sint. Excepturi.
+            <h3 class="md-subheading">Forecast</h3>
+            <div class="forecast">
+              <li v-for="forecast in weather.item.forecast">
+                {{ forecast.day }}, {{ forecast.date }}:
+                <img height="30" width="30" :src="'/static/conditions/' + forecast.code + '.svg'" :alt="forecast.text">
+                <strong>{{ forecast.text }}</strong> {{ forecast.high }} / {{ forecast.low }} &deg;{{ weather.units.temperature }}
+              </li>
+            </div>
           </md-card-content>
+
         </md-card>
 
       </md-whiteframe>
@@ -49,31 +58,49 @@ import axios from 'axios';
 export default {
   name: 'weather',
   data: () => ({
-    loading: false,
+    loading: true,
     error: null,
+    weather: null,
+    city: null,
   }),
   created() {
+    if (this.$route.params && this.$route.params.zip) {
+      this.fetchWeather();
+    }
+  },
+  computed: {
+    weatherReady() {
+      return !this.loading && !this.error && this.weather && this.city;
+    },
   },
   watch: {
-    // call again the method if the route changes
     '$route.params': 'fetchWeather',
   },
   methods: {
-    fetchWeather() {
+    async fetchWeather() {
       this.error = null;
       this.loading = true;
-      axios.get('/static/cities.json')
-        .then((res) => {
-          this.loading = false;
-          if (res && res.data && res.data.length) {
-            this.cities = res.data;
-          } else {
-            throw new Error('Error retrieving cities list');
-          }
-        })
-        .catch((error) => {
-          this.error = error;
-        });
+      try {
+        const [city, weather] = await Promise.all([
+          axios.get(`//localhost:3000/cities/${this.$route.params.zip}`),
+          axios.get(`//localhost:3000/weather/${this.$route.params.zip}`)]);
+        this.loading = false;
+
+        if (!city || !city.data) {
+          throw new Error('Error retrieving city information');
+        }
+        this.city = city.data;
+        console.info(this.city);
+
+        if (!weather || !weather.data) {
+          throw new Error('Error retrieving weather');
+        }
+        this.weather = weather.data;
+        console.info(this.weather);
+      } catch (error) {
+        console.warn(error);
+        this.error = error;
+      }
     },
   },
 };
@@ -81,7 +108,7 @@ export default {
 
 <style scoped>
 
-.city-select {
+.weather {
   width: 100%;
   margin: 20px;
 }

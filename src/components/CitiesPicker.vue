@@ -4,7 +4,7 @@
       <md-list class="md-double-line" >
         <md-subheader>Choose the city:</md-subheader>
 
-        <md-list-item v-for="city in cities" @click.native="cityClicked(city.zip)" :value="city.zip" :key="city.zip" class="city-item">
+        <md-list-item v-for="city in cities" @click.native="cityClicked(city.zip)" href="/#/" :value="city.zip" :key="city.zip" class="city-item">
           <md-avatar >
             <img :src="city.thumbnail" :alt="city.name">
           </md-avatar>
@@ -53,7 +53,7 @@ export default {
     fetchCities() {
       this.error = null;
       this.loading = true;
-      axios.get('/static/cities.json')
+      axios.get('//localhost:3000/cities')
         .then((res) => {
           this.loading = false;
           if (res && res.data && res.data.length) {

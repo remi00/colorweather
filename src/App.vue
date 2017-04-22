@@ -8,11 +8,11 @@
       <md-layout md-flex="30">
         <cities-picker class="city-select"></cities-picker>
       </md-layout>
-        <transition name="fade">
-          <md-layout md-flex="50" v-if="$route.params.zip">
-            <router-view></router-view>
-          </md-layout>
-        </transition>
+      <transition name="fade">
+        <md-layout class="" md-flex="50" v-if="$route.params.zip">
+          <router-view></router-view>
+        </md-layout>
+      </transition>
     </md-layout>
   </div>
 </template>
