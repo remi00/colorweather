@@ -123,7 +123,6 @@ export default {
 
 .weather-container {
   width: 100%;
-  margin: 20px;
 }
 .weather-block-contents {
   display: inline-block;
