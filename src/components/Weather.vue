@@ -1,6 +1,6 @@
 <template>
   <div>
-    <md-whiteframe class="weather" md-elevation="3">
+    <md-whiteframe class="weather-container" md-elevation="3">
       <md-card v-if="weatherReady">
         <md-card-header>
           <md-card-header-text>
@@ -57,7 +57,7 @@
       </md-card>
 
     </md-whiteframe>
-    <md-spinner v-if="loading" md-indeterminate></md-spinner>
+    <md-spinner class="weather-spinner md-accent" v-if="loading" md-indeterminate></md-spinner>
   </div>
 </template>
 
@@ -121,7 +121,7 @@ export default {
 
 <style scoped>
 
-.weather {
+.weather-container {
   width: 100%;
   margin: 20px;
 }
@@ -142,5 +142,8 @@ export default {
 .forecast-item {
   text-align:center;
   margin: 5px;
+}
+.weather-spinner {
+  left: 50%;
 }
 </style>

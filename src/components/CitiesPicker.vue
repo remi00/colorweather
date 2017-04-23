@@ -1,10 +1,10 @@
 <template>
   <div>
-    <md-whiteframe v-if="citiesReady" md-elevation="3" class="city-select">
+    <md-whiteframe v-if="citiesReady" md-elevation="3" class="city-picker-container">
       <md-list class="md-double-line" >
         <md-subheader>Choose the city:</md-subheader>
 
-        <md-list-item v-for="city in cities" @click.native="cityClicked(city.zip)" href="/#/" :value="city.zip" :key="city.zip" class="city-item">
+        <md-list-item v-for="city in cities" @click.native="cityClicked(city.zip)" :key="city.zip" :class="[city.zip === picked ? 'city-picked' : '', 'city-item']">
           <md-avatar >
             <img :src="city.thumbnail" :alt="city.name">
           </md-avatar>
@@ -13,13 +13,13 @@
             <span>{{ city.name }}</span>
             <span>{{ city.state }}, {{ city.zip }}</span>
           </div>
-          <md-button v-if="city.zip == selectedCityZip" class="md-icon-button md-list-action">
+          <md-button v-if="isCitySelected(city.zip)" class="md-icon-button md-list-action">
             <md-icon class="md-primary">done</md-icon>
           </md-button>
 
         </md-list-item>
       </md-list>
-      <md-button :href="'#/weather/' + selectedCityZip" :disabled="!selectedCityZip" class="md-raised md-primary">Show Weather</md-button>
+      <md-button :href="'#/weather/' + picked" :disabled="!picked" class="md-raised md-primary">Show Weather</md-button>
     </md-whiteframe>
     <md-spinner v-if="loading" md-indeterminate></md-spinner>
   </div>
@@ -34,7 +34,8 @@ export default {
     cities: [],
     loading: false,
     error: null,
-    selectedCityZip: null,
+    picked: null,
+    selected: null,
   }),
   created() {
     // fetch the data when the view is created and the data is
@@ -48,7 +49,11 @@ export default {
   },
   methods: {
     cityClicked(zip) {
-      this.selectedCityZip = zip;
+      this.picked = zip;
+    },
+    isCitySelected(zip) {
+      return (this.$route.params && this.$route.params.zip &&
+        Number(this.$route.params.zip) === zip);
     },
     fetchCities() {
       this.error = null;
@@ -75,7 +80,13 @@ export default {
 .city-item {
   cursor: pointer;
 }
+.city-picked {
+  background: rgba(0,0,0,0.15);
+}
 .city-item:hover {
   background: rgba(0,0,0,0.05);
+}
+.city-picker-container {
+  min-height: 100px;
 }
 </style>
