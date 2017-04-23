@@ -9,8 +9,8 @@
         <cities-picker class="city-select"></cities-picker>
       </md-layout>
       <transition name="fade">
-        <md-layout class="" md-flex="50" v-if="$route.params.zip">
-          <router-view></router-view>
+        <md-layout md-flex="30" v-if="$route.params.zip">
+          <router-view class="contents"></router-view>
         </md-layout>
       </transition>
     </md-layout>
@@ -32,6 +32,9 @@ export default {
 .city-select {
   width: 100%;
   margin: 20px;
+}
+.contents {
+  width: 100%;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
