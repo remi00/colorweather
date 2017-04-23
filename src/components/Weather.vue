@@ -52,6 +52,8 @@
             </div>
           </div>
           <p class="md-caption">Last update: {{ weather.lastBuildDate }}</p>
+          <a :href="weather.image.link"><img :title="weather.image.title" :src="weather.image.url" :height="weather.image.height"
+             :width="weather.image.width" :alt="weather.image.title"></a>
         </md-card-content>
 
       </md-card>
